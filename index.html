@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>核验机器人</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .section {
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .button {
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: opacity 0.2s;
+        }
+
+        .button:active {
+            opacity: 0.8;
+        }
+
+        .button-icon {
+            font-size: 20px;
+        }
+
+        .button-text {
+            flex: 1;
+            text-align: left;
+            margin-left: 12px;
+        }
+
+        .button-arrow {
+            font-size: 18px;
+        }
+
+        .info-box {
+            background: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--tg-theme-hint-color, #e0e0e0);
+            margin: 16px 0;
+            opacity: 0.3;
+        }
+
+        .command-list {
+            list-style: none;
+        }
+
+        .command-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .command-code {
+            background: var(--tg-theme-bg-color, #ffffff);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-right: 12px;
+            min-width: 80px;
+        }
+
+        .command-desc {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 核验机器人</h1>
+            <p>快速访问常用功能</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📋 基础验证</div>
+            <button class="button" onclick="sendCommand('手机二要素')">
+                <span class="button-icon">📱</span>
+                <span class="button-text">手机二要素</span>
+                <span class="button-arrow">›</span>
+            </button>
+            <button class="button" onclick="sendCommand('身份证二要素')">
+                <span class="button-icon">🪪</span>
+                <span class="button-text">身份证二要素</span>
+                <span class="button-arrow">›</span>
+            </button>
+            <button class="button" onclick="sendCommand('三要素验证')">
+                <span class="button-icon">✅</span>
+                <span class="button-text">三要素验证</span>
+                <span class="button-arrow">›</span>
+            </button>
+            <button class="button" onclick="sendCommand('银行卡验证')">
+                <span class="button-icon">💳</span>
+                <span class="button-text">银行卡验证</span>
+                <span class="button-arrow">›</span>
+            </button>
+            <div class="info-box">
+                💡 选择验证类型后，直接在聊天中发送对应信息即可
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔧 高级功能</div>
+            <button class="button" onclick="sendCommand('/p3')">
+                <span class="button-icon">⚡️</span>
+                <span class="button-text">批量核验</span>
+                <span class="button-arrow">›</span>
+            </button>
+            <button class="button" onclick="sendCommand('/sc')">
+                <span class="button-icon">🎲</span>
+                <span class="button-text">生成身份证</span>
+                <span class="button-arrow">›</span>
+            </button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📖 命令列表</div>
+            <ul class="command-list">
+                <li class="command-item">
+                    <code class="command-code">/start</code>
+                    <span class="command-desc">显示帮助信息</span>
+                </li>
+                <li class="command-item">
+                    <code class="command-code">/p3</code>
+                    <span class="command-desc">批量三要素核验</span>
+                </li>
+                <li class="command-item">
+                    <code class="command-code">/sc</code>
+                    <span class="command-desc">生成身份证号</span>
+                </li>
+                <li class="command-item">
+                    <code class="command-code">/qx</code>
+                    <span class="command-desc">退出特殊模式</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Telegram Web App
+        let tg = window.Telegram.WebApp;
+        
+        // 展开 Web App 到全屏
+        tg.expand();
+        
+        // 设置主题颜色
+        tg.setHeaderColor('secondary_bg_color');
+        
+        // 启用关闭确认
+        tg.enableClosingConfirmation();
+
+        function sendCommand(command) {
+            // 发送命令到机器人
+            if (command.startsWith('/')) {
+                tg.sendData(command);
+            } else {
+                // 对于非命令，只是提示用户
+                tg.showAlert('请在聊天中输入对应的信息\n\n例如：\n• 手机二要素：张三 13800138000\n• 身份证二要素：张三 110101199001011234\n• 三要素：张三 13800138000 110101199001011234');
+            }
+        }
+
+        // 监听主按钮点击
+        tg.MainButton.setText('关闭');
+        tg.MainButton.onClick(function() {
+            tg.close();
+        });
+        tg.MainButton.show();
+
+        // 准备就绪
+        tg.ready();
+    </script>
+</body>
+</html>
